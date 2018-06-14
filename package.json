@@ -1,0 +1,20 @@
+{
+  "name": "gcloud-node-thumbnail-generator",
+  "version": "1.0.0",
+  "description": "Node thumbnail generator for Google Cloud Functions",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dabolus/gcloud-node-thumbnail-generator.git"
+  },
+  "author": "Giorgio Garasto <mail@dabolus.app>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/datastore": "^1.4.0",
+    "@google-cloud/storage": "^1.7.0"
+  }
+}
