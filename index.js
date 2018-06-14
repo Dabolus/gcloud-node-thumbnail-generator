@@ -20,8 +20,9 @@ exports.generateThumbnail = async (file, context) => {
   try {
     // We expect the file name to be the same as the ID of our project ID on Datastore
     const projectId = file.name.replace(/^.*[\\\/]/g, '').replace(/\.[^.]+$/g, '');
-    const [buffer] = await file.download();
+    // const [buffer] = await file.download();
     console.log(`Generating thumbnail for '${projectId}'...`);
+    console.log('File: ', file, '\nClass: ', file.constructor.name);
     // TODO: generate the thumbnail using sqip or node-primitive
   } catch (e) {
     console.error(e);
