@@ -1,5 +1,7 @@
 const Storage = require('@google-cloud/storage');
 const Datastore = require('@google-cloud/datastore');
+const { generateSVG } = require('node-primitive/src/api');
+const { Triangle, Ellipse, Rectangle, Polygon } = require('node-primitive/src/shape');
 
 const bucketName = 'dabolus-bucket';
 let bucket, datastore;
@@ -26,7 +28,16 @@ exports.generateThumbnail = async (file, context) => {
     const projectId = file.name.replace(/^.*[\\\/]/g, '').replace(/\.[^.]+$/g, '');
     console.log(`Generating thumbnail for '${projectId}'...`);
     const [buffer] = await bucket.file(file.name).download();
-    // TODO: generate the thumbnail using sqip or node-primitive
+    const svg = await generateSVG(buffer, {
+      computeSize: 512,
+      width: 512,
+      height: 512,
+      viewSize: 512,
+      shapeTypes: [Triangle, Ellipse, Rectangle, Polygon],
+      blur: 12,
+      shapes: 8,
+    });
+    console.log(svg);
   } catch (e) {
     console.error(e);
   }
