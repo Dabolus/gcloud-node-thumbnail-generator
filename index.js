@@ -86,11 +86,22 @@ exports.generateThumbnail = async (file) => {
     const key = datastore.key([kind, projectId]);
     await datastore.save({
       key,
-      data: {
-        id: projectId,
-        icon: `https://${bucketName}.storage.googleapis.com/${file.name}`,
-        placeholder: optimizedSVG,
-      },
+      data: [
+        {
+          name: 'id',
+          value: projectId,
+        },
+        {
+          name: 'icon',
+          value: `https://${bucketName}.storage.googleapis.com/${file.name}`,
+          excludeFromIndexes: true,
+        },
+        {
+          name: 'placeholder',
+          value: optimizedSVG,
+          excludeFromIndexes: true,
+        },
+      ],
     });
   } catch (e) {
     console.error(e);
