@@ -25,6 +25,7 @@ const patchSVGGroup = (svg) => {
 };
 
 const postProcess = (svg) => {
+  console.log(svg);
   let blurStdDev = 12;
   let blurFilterId = 'b';
   let newSVG;
