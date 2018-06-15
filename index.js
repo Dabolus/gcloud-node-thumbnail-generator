@@ -41,7 +41,7 @@ const postProcess = (svg) => {
   let blurFilterId = 'b';
   let newSVG;
 
-  if (/<svg.*?><path.*?><g/.test(svg)) {
+  if (svg.match(/<svg.*?><path.*?><g/) === null) {
     blurStdDev = 55;
     newSVG = patchSVGGroup(svg);
     blurFilterId = 'c';
