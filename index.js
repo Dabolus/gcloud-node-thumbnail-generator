@@ -27,11 +27,12 @@ exports.generateThumbnail = async (file, context) => {
     const projectId = file.name.replace(/^.*[\\\/]/g, '').replace(/\.[^.]+$/g, '');
     console.log(`Generating thumbnail for '${projectId}'...`);
     const [buffer] = await bucket.file(file.name).download();
-    const svg = await primitive({
+    const model = await primitive({
       input: `data:${file.contentType};base64,${buffer.toString('base64')}`,
       numSteps: 8,
       shapeType: 'random',
     });
+    const svg = model.toSVG();
     console.log(svg);
   } catch (e) {
     console.error(e);
