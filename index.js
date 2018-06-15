@@ -28,7 +28,7 @@ exports.generateThumbnail = async (file, context) => {
     console.log(`Generating thumbnail for '${projectId}'...`);
     const [buffer] = await bucket.file(file.name).download();
     const svg = await primitive({
-      input: buffer,
+      input: `data:${file.contentType};base64,${buffer.toString('base64')}`,
       numSteps: 8,
       shapeType: 'random',
     });
