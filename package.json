@@ -4,8 +4,7 @@
   "description": "Node thumbnail generator for Google Cloud Functions",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "preinstall": "sudo apt-get update && sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +16,6 @@
   "dependencies": {
     "@google-cloud/datastore": "^1.4.0",
     "@google-cloud/storage": "^1.7.0",
-    "node-primitive": "0.0.2"
+    "primitive": "^1.0.1"
   }
 }
