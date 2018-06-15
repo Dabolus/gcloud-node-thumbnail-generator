@@ -3,6 +3,7 @@ const Datastore = require('@google-cloud/datastore');
 const sharp = require('sharp');
 const primitive = require('primitive');
 const SVGO = require('svgo');
+const toSafeDataURI = require('mini-svg-data-uri');
 
 const bucketName = 'dabolus-bucket';
 const kind = 'Project';
@@ -49,9 +50,8 @@ const postProcess = (svg) => {
     newSVG = svg.replace(/(<g)/, `<g filter="url(#${blurFilterId})"`);
   }
   const filter = `<filter id="${blurFilterId}"><feGaussianBlur stdDeviation="${blurStdDev}"/></filter>`;
-  const svgBuffer =
-    Buffer.from(newSVG.replace(/(<svg)(.*?)(>)/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">${filter}`));
-  return `data:image/svg+xml;base64,${svgBuffer.toString('base64')}`;
+  const finalSVG = newSVG.replace(/(<svg)(.*?)(>)/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">${filter}`);
+  return toSafeDataURI(finalSVG);
 };
 
 /**
