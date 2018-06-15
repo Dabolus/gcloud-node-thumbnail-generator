@@ -9,14 +9,22 @@ const kind = 'Project';
 
 let bucket, datastore, svgOptimizer;
 
+/**
+ * @param {!string} svg
+ * @returns {Promise<string>}
+ */
 const optimize = (svg) => {
   svgOptimizer = svgOptimizer || new SVGO({
     multipass: true,
     floatPrecision: 1,
   });
-  return svgOptimizer.optimize(svg);
+  return svgOptimizer.optimize(svg).then(({ data }) => data);
 };
 
+/**
+ * @param {!string} svg
+ * @returns {string}
+ */
 const patchSVGGroup = (svg) => {
   const gStartIndex = svg.match(/<path.*?>/).index + svg.match(/<path.*?>/)[0].length;
   const gEndIndex = svg.match(/<\/svg>/).index;
@@ -24,8 +32,11 @@ const patchSVGGroup = (svg) => {
   return `${svg.slice(0, gStartIndex)}${svgG}${svg.slice(gStartIndex, gEndIndex)}</g></svg>`;
 };
 
+/**
+ * @param {!string} svg
+ * @returns {string}
+ */
 const postProcess = (svg) => {
-  console.log(svg);
   let blurStdDev = 12;
   let blurFilterId = 'b';
   let newSVG;
@@ -47,9 +58,8 @@ const postProcess = (svg) => {
  * Triggered from a change to a Cloud Storage bucket.
  *
  * @param {!Object} file The Cloud Storage file.
- * @param {!Object} context The context object for the event.
  */
-exports.generateThumbnail = async (file, context) => {
+exports.generateThumbnail = async (file) => {
   bucket = bucket || new Storage({
     projectId: process.env.GOOGLE_CLOUD_PROJECT,
   }).bucket(bucketName);
