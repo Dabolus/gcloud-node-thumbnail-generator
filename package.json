@@ -14,7 +14,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@google-cloud/datastore": "^3.1.1",
+    "@google-cloud/firestore": "^1.0.1",
     "@google-cloud/storage": "^2.4.2",
     "mini-svg-data-uri": "^1.0.2",
     "primitive": "^1.0.1",

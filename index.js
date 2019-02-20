@@ -1,14 +1,14 @@
 const { Storage } = require('@google-cloud/storage');
-const { Datastore } = require('@google-cloud/datastore');
+const Firestore = require('@google-cloud/firestore');
 const sharp = require('sharp');
 const primitive = require('primitive');
 const SVGO = require('svgo');
 const toSafeDataURI = require('mini-svg-data-uri');
 
 const bucketName = process.env.BUCKET;
-const kind = process.env.KIND;
+const collection = process.env.COLLECTION;
 
-let bucket, datastore, svgOptimizer;
+let bucket, firestore, svgOptimizer;
 
 /**
  * @param {!string} svg
@@ -64,7 +64,7 @@ exports.generateThumbnail = async (file) => {
   bucket = bucket || new Storage({
     projectId: process.env.GOOGLE_CLOUD_PROJECT,
   }).bucket(bucketName);
-  datastore = datastore || new Datastore({
+  firestore = firestore || new Firestore({
     projectId: process.env.GOOGLE_CLOUD_PROJECT,
   });
 
@@ -72,7 +72,7 @@ exports.generateThumbnail = async (file) => {
     return;
   }
   try {
-    // We expect the file name to be the same as the ID of our project ID on Datastore
+    // We expect the file name to be the same as the ID of our project ID on Firestore
     const projectId = file.name.replace(/^.*[\\\/]/g, '').replace(/\.[^.]+$/g, '');
     console.log(`Generating thumbnail for '${projectId}'...`);
     const [buffer] = await bucket.file(file.name).download();
@@ -84,25 +84,10 @@ exports.generateThumbnail = async (file) => {
     });
     const svg = model.toSVG();
     const optimizedSVG = await optimize(svg).then(postProcess);
-    const key = datastore.key([kind, projectId]);
-    await datastore.save({
-      key,
-      data: [
-        {
-          name: 'id',
-          value: projectId,
-        },
-        {
-          name: 'icon',
-          value: `https://${bucketName}.storage.googleapis.com/${file.name}`,
-          excludeFromIndexes: true,
-        },
-        {
-          name: 'placeholder',
-          value: optimizedSVG,
-          excludeFromIndexes: true,
-        },
-      ],
+    await firestore.collection(collection).doc(projectId).set({
+      id: projectId,
+      icon: `https://${bucketName}.storage.googleapis.com/${file.name}`,
+      placeholder: optimizedSVG,
     });
   } catch (e) {
     console.error(e);
