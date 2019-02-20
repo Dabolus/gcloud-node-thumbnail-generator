@@ -4,7 +4,8 @@
   "description": "Node thumbnail generator for Google Cloud Functions",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,11 @@
     "primitive": "^1.0.1",
     "sharp": "^0.21.3",
     "svgo": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.9.4",
+    "@types/sharp": "^0.21.2",
+    "@types/svgo": "^1.0.1",
+    "typescript": "^3.3.3"
   }
 }

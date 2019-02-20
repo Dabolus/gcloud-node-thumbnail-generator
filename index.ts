@@ -1,24 +1,24 @@
-const { Storage } = require('@google-cloud/storage');
-const Firestore = require('@google-cloud/firestore');
-const sharp = require('sharp');
-const primitive = require('primitive');
-const SVGO = require('svgo');
-const toSafeDataURI = require('mini-svg-data-uri');
+import { Storage, Bucket } from '@google-cloud/storage';
+import { Firestore } from '@google-cloud/firestore';
+import sharp from 'sharp';
+import primitive from 'primitive';
+import SVGO from 'svgo';
+import toSafeDataURI from 'mini-svg-data-uri';
 
-const bucketName = process.env.BUCKET;
-const collection = process.env.COLLECTION;
+const bucketName = process.env.BUCKET!;
+const collection = process.env.COLLECTION!;
 
-let bucket, firestore, svgOptimizer;
+let bucket: Bucket, firestore: Firestore, svgOptimizer: SVGO;
 
 /**
  * @param {!string} svg
  * @returns {Promise<string>}
  */
-const optimize = async (svg) => {
+const optimize = async (svg: string): Promise<string> => {
   svgOptimizer = svgOptimizer || new SVGO({
     multipass: true,
     floatPrecision: 1,
-  });
+  } as any);
   const { data } = await svgOptimizer.optimize(svg);
   return data;
 };
@@ -27,9 +27,9 @@ const optimize = async (svg) => {
  * @param {!string} svg
  * @returns {string}
  */
-const patchSVGGroup = (svg) => {
-  const gStartIndex = svg.match(/<path.*?>/).index + svg.match(/<path.*?>/)[0].length;
-  const gEndIndex = svg.match(/<\/svg>/).index;
+const patchSVGGroup = (svg: string): string => {
+  const gStartIndex = svg.match(/<path.*?>/)!.index! + svg.match(/<path.*?>/)![0].length;
+  const gEndIndex = svg.match(/<\/svg>/)!.index;
   const svgG = `<g filter='url(#c)' fill-opacity='.5'>`;
   return `${svg.slice(0, gStartIndex)}${svgG}${svg.slice(gStartIndex, gEndIndex)}</g></svg>`;
 };
@@ -38,7 +38,7 @@ const patchSVGGroup = (svg) => {
  * @param {!string} svg
  * @returns {string}
  */
-const postProcess = (svg) => {
+const postProcess = (svg: string): string => {
   let blurStdDev = 12;
   let blurFilterId = 'b';
   let newSVG;
@@ -60,7 +60,7 @@ const postProcess = (svg) => {
  *
  * @param {!Object} file The Cloud Storage file.
  */
-exports.generateThumbnail = async (file) => {
+exports.generateThumbnail = async (file: FunctionData): Promise<void> => {
   bucket = bucket || new Storage({
     projectId: process.env.GOOGLE_CLOUD_PROJECT,
   }).bucket(bucketName);
