@@ -5,8 +5,8 @@ const primitive = require('primitive');
 const SVGO = require('svgo');
 const toSafeDataURI = require('mini-svg-data-uri');
 
-const bucketName = 'dabolus-bucket';
-const kind = 'Project';
+const bucketName = process.env.BUCKET;
+const kind = process.env.KIND;
 
 let bucket, datastore, svgOptimizer;
 
