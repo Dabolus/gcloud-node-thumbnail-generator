@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/Dabolus/gcloud-node-thumbnail-generator.git"
   },
-  "author": "Giorgio Garasto <mail@dabolus.app>",
+  "author": "Giorgio Garasto <giorgio@garasto.it>",
   "license": "MIT",
   "private": true,
   "dependencies": {
