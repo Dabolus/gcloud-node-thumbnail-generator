@@ -14,12 +14,13 @@ let bucket, datastore, svgOptimizer;
  * @param {!string} svg
  * @returns {Promise<string>}
  */
-const optimize = (svg) => {
+const optimize = async (svg) => {
   svgOptimizer = svgOptimizer || new SVGO({
     multipass: true,
     floatPrecision: 1,
   });
-  return svgOptimizer.optimize(svg).then(({ data }) => data);
+  const { data } = await svgOptimizer.optimize(svg);
+  return data;
 };
 
 /**
