@@ -1,5 +1,5 @@
-const Storage = require('@google-cloud/storage');
-const Datastore = require('@google-cloud/datastore');
+const { Storage } = require('@google-cloud/storage');
+const { Datastore } = require('@google-cloud/datastore');
 const sharp = require('sharp');
 const primitive = require('primitive');
 const SVGO = require('svgo');

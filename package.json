@@ -14,11 +14,11 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@google-cloud/datastore": "^1.4.0",
-    "@google-cloud/storage": "^1.7.0",
-    "mini-svg-data-uri": "^1.0.1",
+    "@google-cloud/datastore": "^3.1.1",
+    "@google-cloud/storage": "^2.4.2",
+    "mini-svg-data-uri": "^1.0.2",
     "primitive": "^1.0.1",
-    "sharp": "^0.20.3",
-    "svgo": "^1.0.5"
+    "sharp": "^0.21.3",
+    "svgo": "^1.1.1"
   }
 }
