@@ -7,6 +7,8 @@ import toSafeDataURI from 'mini-svg-data-uri';
 
 const bucketName = process.env.BUCKET!;
 const collection = process.env.COLLECTION!;
+const thumbnailWidth = 256;
+const thumbnailHeight = 256;
 
 let bucket: Bucket, firestore: Firestore, svgOptimizer: SVGO;
 
@@ -51,7 +53,7 @@ const postProcess = (svg: string): string => {
     newSVG = svg.replace(/(<g)/, `<g filter="url(#${blurFilterId})"`);
   }
   const filter = `<filter id="${blurFilterId}"><feGaussianBlur stdDeviation="${blurStdDev}"/></filter>`;
-  const finalSVG = newSVG.replace(/(<svg)(.*?)(>)/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">${filter}`);
+  const finalSVG = newSVG.replace(/(<svg)(.*?)(>)/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${thumbnailWidth} ${thumbnailHeight}">${filter}`);
   return toSafeDataURI(finalSVG);
 };
 
@@ -76,7 +78,7 @@ exports.generateThumbnail = async (file: FunctionData): Promise<void> => {
     const projectId = file.name.replace(/^.*[\\\/]/g, '').replace(/\.[^.]+$/g, '');
     console.log(`Generating thumbnail for '${projectId}'...`);
     const [buffer] = await bucket.file(file.name).download();
-    const scaledBuffer = await sharp(buffer).resize(256, 256).toBuffer();
+    const scaledBuffer = await sharp(buffer).resize(thumbnailWidth, thumbnailHeight).toBuffer();
     const model = await primitive({
       input: `data:${file.contentType};base64,${scaledBuffer.toString('base64')}`,
       numSteps: 8,
